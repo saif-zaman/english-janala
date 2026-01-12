@@ -87,10 +87,10 @@ const displayLevelWord = (words) => {
         const card = document.createElement("div")
         card.innerHTML = `
         <div class="bg-white rounded-xl shadow-sm text-center py-10 px-5 space-y-5">
-            <h2 class="font-bold text-2xl">${word.word ? word.word:"শব্দ পাওয়া যায় নি"}</h2>
+            <h2 class="font-bold text-2xl">${word.word ? word.word : "শব্দ পাওয়া যায় নি"}</h2>
             <p class="font-semibold">Meaning / pronunciation</p>
 
-            <div class="text-2xl font-medium font-bangla">"${word.meaning?word.meaning:"অর্থ পাওয়া যায় নি"} / ${word.pronunciation ? word.pronunciation : "উচ্চারণ পাওয়া যায় নি"}"</div>
+            <div class="text-2xl font-medium font-bangla">"${word.meaning ? word.meaning : "অর্থ পাওয়া যায় নি"} / ${word.pronunciation ? word.pronunciation : "উচ্চারণ পাওয়া যায় নি"}"</div>
                 <div class="flex justify-between items-center">
                     <button onclick="loadWordDetail(${word.id})" class="btn bg-[#1A91FF10] hover:bg-[#1A91FF80]"><i class="fa-solid fa-circle-info"></i></button>
                     <button class="btn bg-[#1A91FF10] hover:bg-[#1A91FF80]"><i class="fa-solid fa-volume-high"></i></button>
@@ -121,3 +121,18 @@ const displayLesson = (lessons) => {
 
 
 loadLessons()
+
+document.getElementById("btn-search").addEventListener("click", () => {
+    removeActive()
+    const input = document.getElementById("input-search")
+    const searchValue = input.value.trim().toLowerCase()
+
+    fetch("https://openapi.programming-hero.com/api/words/all")
+        .then(res => res.json())
+        .then(data => {
+            const allWords = data.data
+            const filterWords = allWords.filter(word => word.word.toLowerCase().includes(searchValue))
+            displayLevelWord(filterWords)
+        })
+    
+})
